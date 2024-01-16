@@ -1,5 +1,6 @@
 import express from "express";
 import { client } from "./utils/db.js";
+import questionPostsRouter from "./router-group/question-posts.js";
 
 async function init() {
   const app = express();
@@ -15,9 +16,7 @@ async function init() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
-  app.get("/", (req, res) => {
-    return res.json("Hello Skill Checkpoint #2");
-  });
+  app.use("/question-posts", questionPostsRouter);
 
   app.get("*", (req, res) => {
     return res.status(404).json("Not found");
