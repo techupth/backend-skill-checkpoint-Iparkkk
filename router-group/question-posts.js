@@ -15,11 +15,11 @@ questionPostsRouter.post("/", validateData, async (req, res) => {
 
   try {
     const createQuestion = await collection.insertOne(questionBlogData);
-    return res.json({
-      status: `201 question post ID: ${createQuestion.insertedId}has been create successfully`,
+    return res.status(201).json({
+      message: `question post ID: ${createQuestion.insertedId}has been create successfully`,
     });
   } catch {
-    return res.json({ status: "500 can't create new question post" });
+    return res.status(500).json({ message: "can't create new question post" });
   }
 });
 export default questionPostsRouter;
