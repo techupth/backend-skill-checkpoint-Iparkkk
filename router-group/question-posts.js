@@ -2,7 +2,7 @@ import { Router } from "express";
 import { db } from "../utils/db.js";
 import { ObjectId } from "mongodb";
 import validateData from "../middldewares/validateData.js";
-
+import validateUpdateData from "../middldewares/validateUpdateData.js";
 const questionPostsRouter = Router();
 
 questionPostsRouter.get("/", async (req, res) => {
@@ -38,6 +38,34 @@ questionPostsRouter.post("/", validateData, async (req, res) => {
     });
   } catch {
     return res.status(500).json({ message: "can't create new question post" });
+  }
+});
+
+questionPostsRouter.put("/:id", validateUpdateData, async (req, res) => {
+  const collection = db.collection("question-posts");
+  const targetID = new ObjectId(req.params.id);
+  const newQuestionBlog = { ...req.body };
+  const newTitle = newQuestionBlog.title;
+  const newDescription = newQuestionBlog.description;
+
+  try {
+    if (newTitle != "") {
+      const updateTitle = await collection.updateOne(
+        { _id: targetID },
+        { $set: { title: newTitle } }
+      );
+    }
+    if (newDescription != "") {
+      const updateTitle = await collection.updateOne(
+        { _id: targetID },
+        { $set: { description: newDescription } }
+      );
+    }
+    return res.status(200).json({ message: `ID ${targetID} has been update` });
+  } catch {
+    return res
+      .status(500)
+      .json({ message: "can't update title or deacription" });
   }
 });
 export default questionPostsRouter;
