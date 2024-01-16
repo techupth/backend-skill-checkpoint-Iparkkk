@@ -68,4 +68,22 @@ questionPostsRouter.put("/:id", validateUpdateData, async (req, res) => {
       .json({ message: "can't update title or deacription" });
   }
 });
+questionPostsRouter.delete("/:id", async (req, res) => {
+  const collection = db.collection("question-posts");
+  const targetID = new ObjectId(req.params.id);
+
+  try {
+    const deleteQuestion = await collection.deleteOne({ _id: targetID });
+    return res
+      .status(200)
+      .json({
+        message: `Question ID : ${targetID} has been deleted successfully`,
+      });
+  } catch {
+    return res
+      .status(409)
+      .json({ message: `server can't delete question ID : ${targetID}` });
+  }
+});
+
 export default questionPostsRouter;
