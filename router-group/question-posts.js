@@ -5,8 +5,14 @@ import validateData from "../middldewares/validateData.js";
 
 const questionPostsRouter = Router();
 
-questionPostsRouter.get("/", (req, res) => {
-  return res.json("Hello worlds test database connected");
+questionPostsRouter.get("/", async (req, res) => {
+  const collection = db.collection("question-posts");
+  try {
+    const questionBlogs = await collection.find({}).limit(10).toArray();
+    return res.json({ data: questionBlogs });
+  } catch {
+    return res.status(500).json("server is failed");
+  }
 });
 
 questionPostsRouter.post("/", validateData, async (req, res) => {
