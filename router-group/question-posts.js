@@ -5,8 +5,14 @@ import validateData from "../middldewares/validateData.js";
 
 const questionPostsRouter = Router();
 
-questionPostsRouter.get("/", (req, res) => {
-  return res.json("Hello worlds test database connected");
+questionPostsRouter.get("/", async (req, res) => {
+  const collection = db.collection("question-posts");
+  try {
+    const questionBlogs = await collection.find({}).limit(10).toArray();
+    return res.json({ data: questionBlogs });
+  } catch {
+    return res.status(500).json("server is failed");
+  }
 });
 
 questionPostsRouter.post("/", validateData, async (req, res) => {
@@ -15,11 +21,11 @@ questionPostsRouter.post("/", validateData, async (req, res) => {
 
   try {
     const createQuestion = await collection.insertOne(questionBlogData);
-    return res.json({
-      status: `201 question post ID: ${createQuestion.insertedId}has been create successfully`,
+    return res.status(201).json({
+      message: `question post ID: ${createQuestion.insertedId}has been create successfully`,
     });
   } catch {
-    return res.json({ status: "500 can't create new question post" });
+    return res.status(500).json({ message: "can't create new question post" });
   }
 });
 export default questionPostsRouter;

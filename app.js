@@ -8,9 +8,9 @@ async function init() {
 
   try {
     await client.connect();
-    console.log("status : connected to database is successfully");
+    console.log("status : 200 connected to database is successfully");
   } catch {
-    console.log("Message : can't connect to database");
+    console.log("status : 400 can't connect to database");
   }
 
   app.use(express.json());

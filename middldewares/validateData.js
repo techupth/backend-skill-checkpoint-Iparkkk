@@ -5,7 +5,9 @@ function validateData(req, res, next) {
   const category = blogDatas.category ?? "";
 
   if (title == "" || category == "") {
-    return res.json({ status: `401 information in body is incorrect` });
+    return res
+      .status(401)
+      .json({ message: `information in body is incorrect` });
   }
 
   next();
