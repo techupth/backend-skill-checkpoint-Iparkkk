@@ -47,6 +47,7 @@ questionPostsRouter.put("/:id", validateUpdateData, async (req, res) => {
   const newQuestionBlog = { ...req.body };
   const newTitle = newQuestionBlog.title;
   const newDescription = newQuestionBlog.description;
+  let statusText = "";
 
   try {
     if (newTitle != "") {
@@ -54,14 +55,18 @@ questionPostsRouter.put("/:id", validateUpdateData, async (req, res) => {
         { _id: targetID },
         { $set: { title: newTitle } }
       );
+      statusText = statusText + " title,";
     }
     if (newDescription != "") {
       const updateTitle = await collection.updateOne(
         { _id: targetID },
         { $set: { description: newDescription } }
       );
+      statusText = statusText + " description";
     }
-    return res.status(200).json({ message: `ID ${targetID} has been update` });
+    return res
+      .status(200)
+      .json({ message: `ID ${targetID} ${statusText} has been update` });
   } catch {
     return res
       .status(500)
@@ -74,11 +79,9 @@ questionPostsRouter.delete("/:id", async (req, res) => {
 
   try {
     const deleteQuestion = await collection.deleteOne({ _id: targetID });
-    return res
-      .status(200)
-      .json({
-        message: `Question ID : ${targetID} has been deleted successfully`,
-      });
+    return res.status(200).json({
+      message: `Question ID : ${targetID} has been deleted successfully`,
+    });
   } catch {
     return res
       .status(409)
