@@ -7,9 +7,21 @@ const questionPostsRouter = Router();
 
 questionPostsRouter.get("/", async (req, res) => {
   const collection = db.collection("question-posts");
+  const limit = req.query.limit ?? 10;
   try {
-    const questionBlogs = await collection.find({}).limit(10).toArray();
-    return res.json({ data: questionBlogs });
+    const questionBlogs = await collection.find({}).limit(limit).toArray();
+    return res.status(200).json({ data: questionBlogs });
+  } catch {
+    return res.status(500).json("server is failed");
+  }
+});
+
+questionPostsRouter.get("/:id", async (req, res) => {
+  const collection = db.collection("question-posts");
+  const targetID = new ObjectId(req.params.id);
+  try {
+    const questionBlog = await collection.findOne({ _id: targetID });
+    return res.status(200).json({ data: questionBlog });
   } catch {
     return res.status(500).json("server is failed");
   }
